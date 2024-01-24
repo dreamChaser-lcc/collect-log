@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        html,body {
+            /* width: 100%;
+            height: 100%;
+            overflow: auto; */
+        }
+        body {
+            /* padding-left:300px;
+            width: 100px; */
+        }
+        ul {
+            height: 300px;
+            /* width: 500px; */
+            border: 1px solid black;
+            overflow-y: auto;
+        }
+        li {
+            height: 120px;
+            display: block;counter-increment: number;
+        }
+        li::before {
+            
+            content: counter(number) ;
+        }
+        .list0 {
+            height: 50px;
+            white-space: nowrap;
+        }
+        .list0 li {
+            display: inline-block;
+            width: 200px;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="on-visible" data-log-region="btn-top">btn-top</div>
+    list0
+    <ul id="list0" class="list0"></ul>
+    list1
+    <ul id="list1" class="list1"></ul>
+    list2
+    <ul id="list2" class="list2"></ul>
+    list3
+    <ul id="list3" class="list3"></ul>
+    list4
+    <ul id="list4" class="list4"></ul>
+    <div class="on-visible" data-log-region="btn-bottom">btn-bottom</div>
+</body>
+<script src="http://localhost:4999/js/c.click.event.pv.error.visible.query.onlog.src.browse.js"></script>
+<!-- <script src="https://collect-logs.qianliao.cn/js/c.click.event.pv.error.visible.query.onlog.js"></script> -->
+<script>
+    list0.innerHTML = (function () {
+        var html = '';
+        for (var i = 0; i < 10; i++) {
+            html += '<li class="on-visible" data-log-region="list0" data-log-pos="' + i + '"></li>'
+        }
+        return html;
+    })()
+
+    list1.innerHTML = (function () {
+        var html = '';
+        for (var i = 0; i < 10; i++) {
+            html += '<li class="on-visible" data-log-region="list1" data-log-pos="' + i + '"></li>'
+        }
+        return html;
+    })()
+    list2.innerHTML = (function () {
+        var html = '';
+        for (var i = 0; i < 10; i++) {
+            html += '<li class="on-visible2" data-log-region="list2" data-log-pos="' + i + '"></li>'
+        }
+        return html;
+    })()
+    list3.innerHTML = (function () {
+        var html = '';
+        for (var i = 0; i < 10; i++) {
+            html += '<li class="on-visible" data-log-region="list3" data-log-pos="' + i + '"></li>'
+        }
+        return html;
+    })()
+    list4.innerHTML = (function () {
+        var html = '';
+        for (var i = 0; i < 10; i++) {
+            html += '<li data-log-region="list4" data-log-pos="' + i + '"></li>'
+        }
+        return html;
+    })()
+
+
+
+    setTimeout(function () {
+        // return
+
+        _qla.bindVisibleScroll()
+
+        // 全局曝光
+        // _qla.collectVisible()
+
+        _qla.bindVisibleScroll('list0')
+        _qla.bindBrowseScroll('list1')
+
+        // _qla.bindVisibleScroll('list1')
+
+        // 指定类名，否则全局曝光会把这个列表未滚动到的元素也曝光出来
+        _qla.bindVisibleScroll({
+            wrap: 'list2',
+            className: 'on-visible2'
+        })
+
+        // _qla.bindVisibleScroll({
+        //     wrap: 'list3',
+        //     callback: function (els) {
+        //         console.log('list3', els)
+        //     }
+        // })
+
+        // _qla.bindVisibleScroll({
+        //     wrap: 'none',
+        //     callback: function (els) {
+        //         console.log('none', els)
+        //     }
+        // })
+
+        // _qla.bindVisibleScroll({
+        //     wrap: 'list4',
+        //     callback: function (els) {
+        //         console.log('list4', els)
+        //     }
+        // })
+
+
+    }, 1000)
+
+
+</script>
+</html>

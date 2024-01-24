@@ -1,0 +1,23 @@
+{
+    "name": "ql-collect",
+    "version": "1.0.0",
+    "debug": false,
+    "logBuffer": 1,
+    "whiteSites": [
+        "test.qlchat.com",
+        "test2.qlchat.com",
+        "test3.qlchat.com",
+        "test4.qlchat.com",
+        "h5.qianliao.cn",
+        "zf.qianliao.net"
+    ],
+
+    "expires": 86400,
+    "cacheControl": "max-age=86400",
+
+    "requestTimeout": 3000,
+
+    "logApiSecret": "fc89240288f213e999adc09e6bad4101",
+    "logApi": "http://abc.de.f.qlchat/h5/system/upload-log",
+    "logDir": "/data/nodeapp/logs/collect-log"
+}

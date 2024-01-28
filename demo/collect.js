@@ -1,6 +1,80 @@
+/**填充url */
+function fillUrlParams(params, url = location.href){
+    return url + '?' + Object.keys(params).map(key => `${key}=${params[key]}`).join('&');
+}
 
-const body = document.body;
+/**合并参数 */
+function fillParams(target,extend){
+    return {
+        ...target.dataset,
+        ...extend   
+    }
+}
 
+/**防抖函数 */
+function debounce(func, delay, immediate) {
+    let timer;
+    return function() {
+      const context = this;
+      const args = arguments;
+      const later = function() {
+        timer = null;
+        if (!immediate) func.apply(context, args);
+      };
+      const callNow = immediate && !timer;
+      clearTimeout(timer);
+      timer = setTimeout(later, delay);
+      if (callNow) func.apply(context, args);
+    };
+}
+
+
+/**节流函数 */
+const throttle = (fn, delay) => {
+    let startTime = Date.now();
+    let timer = null;
+    return function() {
+        const curTime = Date.now();
+        const restTime = delay - (curTime - startTime);
+        const params = arguments;
+        clearTimeout(timer);
+        if (restTime <= 0) {
+            //说明时间已超过
+            fn.apply(this,[...params]);
+        } else {
+            timer = setTimeout(() => {
+                fn.apply(this,[...params]);
+                startTime = Date.now();
+            }, restTime);
+        }
+    };
+};
+
+/**
+ * 发送埋点日志
+ * @param {*} scene 发送方式: navigator.sendBeacon || Image || sentry
+ * @param {*} params 
+ */
+function sendInfo(scene, params){
+    const sendUrl = fillUrlParams(params);
+    if(sentry.initialized){
+        sentry.sendMessage(params);
+    }
+    else if(typeof navigator.sendBeacon ==='function' && /http(s)?/.test(location.protocol)){
+        navigator.sendBeacon(sendUrl, {...params});
+    }else{
+        const req = new Image();
+        req.src = sendUrl;
+        req.onload = function(){
+            console.log("发送成功啦🚀 ~:", params);
+        }
+        req.onerror = function(err){
+            console.log("发送失败啦🚀 ~ err:", err);
+        }
+    }
+}
+
+/**sentry收集日志平台实例 */
 class SentryEntity{
     initialized = false;
     Sentry = window.Sentry;
@@ -48,81 +122,8 @@ class SentryEntity{
         this.Sentry.captureMessage(msgStr);
     }
 }
-const sentry = new SentryEntity();
 
-function fillUrlParams(params, url = location.href){
-    return url + '?' + Object.keys(params).map(key => `${key}=${params[key]}`).join('&');
-}
-
-/**
- * 发送方式: navigator.sendBeacon || Image || sentry
- * @param {*} scene sendBeacon || Image || sentry
- * @param {*} params 
- */
-function sendInfo(scene, params){
-    const sendUrl = fillUrlParams(params);
-    if(sentry.initialized){
-        sentry.sendMessage(params);
-    }
-    else if(typeof navigator.sendBeacon ==='function' && /http(s)?/.test(location.protocol)){
-        navigator.sendBeacon(sendUrl, {...params});
-    }else{
-        const req = new Image();
-        req.src = sendUrl;
-        req.onload = function(){
-            console.log("发送成功啦🚀 ~:", params);
-        }
-        req.onerror = function(err){
-            console.log("发送失败啦🚀 ~ err:", err);
-        }
-    }
-}
-
-function fillParams(target,extend){
-    return {
-        ...target.dataset,
-        ...extend   
-    }
-}
-
-/**防抖函数 */
-function debounce(func, delay, immediate) {
-    let timer;
-    return function() {
-      const context = this;
-      const args = arguments;
-      const later = function() {
-        timer = null;
-        if (!immediate) func.apply(context, args);
-      };
-      const callNow = immediate && !timer;
-      clearTimeout(timer);
-      timer = setTimeout(later, delay);
-      if (callNow) func.apply(context, args);
-    };
-}
-
-/**节流函数 */
-const throttle = (fn, delay) => {
-    let startTime = Date.now();
-    let timer = null;
-    return function() {
-        const curTime = Date.now();
-        const restTime = delay - (curTime - startTime);
-        const params = arguments;
-        clearTimeout(timer);
-        if (restTime <= 0) {
-            //说明时间已超过
-            fn.apply(this,[...params]);
-        } else {
-            timer = setTimeout(() => {
-                fn.apply(this,[...params]);
-                startTime = Date.now();
-            }, restTime);
-        }
-    };
-};
-
+/**收集点击埋点实例 */
 class CollectClick {
     constructor(){
     }
@@ -152,10 +153,8 @@ class CollectClick {
         container.addEventListener('click',(e)=>this.onLogClick(e))
     }
 }
-const collectClick = new CollectClick();
-collectClick.init(window);
 
-/**收集曝光埋点 */
+/**收集曝光埋点实例 */
 class CollectVisible {
     /**
      * 获取当前窗口的尺寸
@@ -265,8 +264,10 @@ class CollectVisible {
     }
 }
 
+const sentry = new SentryEntity();
+
+const collectClick = new CollectClick();
+collectClick.init(window);
+
 const collectVisibleInstance = new CollectVisible();
-function scrollEvent(execFunc){
-    window.addEventListener('scroll',execFunc)
-}
 collectVisibleInstance.init();

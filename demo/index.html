@@ -1,27 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>collect</title>
 </head>
+
 <body>
-    <div class="wrap on-visible" style="overflow: scroll;" data-log-region="test" data-log-business_id="11">
-        <div style="margin-top: 10px;">
-            <button class="on-log" data-log-region="collect-click" data-log-business_id="businessId1">收集点击事件的埋点，点我发起</button>
+    <div class="wrap on-visible" style="overflow: scroll" data-log-region="test" data-log-business_id="11">
+        <div style="margin-top: 10px">
+            <button class="on-log" data-log-region="collect-click" data-log-business_id="businessId1">
+                收集点击事件的埋点，点我发起
+            </button>
         </div>
-        <div style="margin-top: 10px;">
-            <button class="on-visible" data-log-region="collect-visible" data-log-business_id="businessId2">收集曝光埋点，点击无效哦</button>
+        <div style="margin-top: 10px">
+            <button class="on-visible" data-log-region="collect-visible" data-log-business_id="businessId2">
+                收集曝光埋点，点击无效哦
+            </button>
         </div>
-        <div style="margin-top: 10px;">
-            <button class="on-log on-visible" data-log-region="collect-click-and-visible" data-log-business_id="businessId3">收集曝光埋点且收集点击埋点</button>
+        <div style="margin-top: 10px">
+            <button class="on-log on-visible" data-log-region="collect-click-and-visible"
+                data-log-business_id="businessId3">
+                收集曝光埋点且收集点击埋点
+            </button>
         </div>
-        <div style="height: 100vh;margin-top: 10px;">啥也不是,占位符一个</div>
+        <div style="height: 100vh; margin-top: 10px">
+            啥也不是,占位符一个，滚动页面触发下一个曝光
+        </div>
         <div>
-            <button class="on-log on-visible" data-log-region="scroll-collect-visible" data-log-business_id="businessId4">第二页收集曝光的埋点</button>
+            <button class="on-log on-visible" data-log-region="scroll-collect-visible"
+                data-log-business_id="businessId4">
+                第二页收集曝光的埋点
+            </button>
         </div>
     </div>
 </body>
+
 </html>
-<script src="./collect.js">
-</script>
+<script src="https://browser.sentry-cdn.com/7.98.0/bundle.tracing.min.js"
+    integrity="sha384-9hudPX3okv9zxZcNUBrFxPoDWbhKI365hRAGH4CtnjzLZWb5Ea+h6wQI+8IvwL0b"
+    crossorigin="anonymous"></script>
+<script src="./collect.js"></script>

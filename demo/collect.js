@@ -1,6 +1,55 @@
 
 const body = document.body;
 
+class SentryEntity{
+    initialized = false;
+    Sentry = window.Sentry;
+    constructor(){
+        this.init();
+    }
+    init(){
+        window.sentryOnLoad = () => {
+            this.Sentry.init({
+              dsn: "https://79519d9de955946d1e829b6ff43f7e63@o4506647619764224.ingest.sentry.io/4506647622385664",
+        
+              // Alternatively, use `process.env.npm_package_version` for a dynamic release version
+              // if your build tool supports it.
+              release: "my-project-name@2.3.12",
+              integrations: [new Sentry.BrowserTracing(), Sentry.replayIntegration()],
+        
+              // Set tracesSampleRate to 1.0 to capture 100%
+              // of transactions for performance monitoring.
+              // We recommend adjusting this value in production
+              tracesSampleRate: 1.0,
+        
+              // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
+              tracePropagationTargets: ["localhost", /^https:\/\/yourserver\.io\/api/],
+        
+              // Capture Replay for 10% of all sessions,
+              // plus for 100% of sessions with an error
+              replaysSessionSampleRate: 0.1,
+              replaysOnErrorSampleRate: 1.0,
+            });
+            this.initialized = true;
+        };
+        sentryOnLoad();
+    }
+    formatMsg(msg){
+        const timeStamp = new Date().getTime() + 8 * 60 * 60 * 1000;
+        const time = new Date(timeStamp).toISOString();
+        if(Object.prototype.toString(msg) !== '[object Object]'){
+            return  `${time} msg:${msg}`
+        }
+        const msgStr = JSON.stringify(msg).replace(/[{}]/g,'');
+        return `${time} msg:${msgStr}`
+    }
+    sendMessage(msg){
+        const msgStr = this.formatMsg(msg);
+        this.Sentry.captureMessage(msgStr);
+    }
+}
+const sentry = new SentryEntity();
+
 function fillUrlParams(params, url = location.href){
     return url + '?' + Object.keys(params).map(key => `${key}=${params[key]}`).join('&');
 }
@@ -10,9 +59,12 @@ function fillUrlParams(params, url = location.href){
  * @param {*} scene sendBeacon || Image || sentry
  * @param {*} params 
  */
-function sendInfo(scene,params){
+function sendInfo(scene, params){
     const sendUrl = fillUrlParams(params);
-    if(typeof navigator.sendBeacon ==='function' && /http(s)?/.test(location.protocol)){
+    if(sentry.initialized){
+        sentry.sendMessage(params);
+    }
+    else if(typeof navigator.sendBeacon ==='function' && /http(s)?/.test(location.protocol)){
         navigator.sendBeacon(sendUrl, {...params});
     }else{
         const req = new Image();
